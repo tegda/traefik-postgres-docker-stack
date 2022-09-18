@@ -1,0 +1,35 @@
+log:
+  level: INFO
+
+api:
+ dashboard: true  # true by default
+ insecure: false  # Don't do this in production!
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entrypoint:
+          to: web-secure
+          scheme: https
+
+  web-secure:
+    address: ":443"
+    http:
+      tls:
+        certResolver: letsencrypt
+
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: mymail@example.com
+      storage: acme.json
+      httpChallenge:
+        entryPoint: web
+
+
+providers:
+  docker:
+    exposedbydefault: false
